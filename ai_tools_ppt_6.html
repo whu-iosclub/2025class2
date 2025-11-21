@@ -258,6 +258,15 @@
                     <p class="text-sm font-medium text-gray-300">Replit AI</p>
                 </div>
             </button>
+
+            <div class="nav-group-title hidden lg:block">Resources</div>
+
+            <button onclick="switchSlide(9)" class="nav-item group w-full flex items-center p-2 rounded-lg cursor-pointer text-left">
+                <div class="w-8 h-8 rounded flex items-center justify-center bg-gray-500/20 text-gray-400"><i class="fa-solid fa-book text-sm"></i></div>
+                <div class="ml-3 hidden lg:block">
+                    <p class="text-sm font-medium text-gray-300">References</p>
+                </div>
+            </button>
         </nav>
 
         <div class="p-4 hidden lg:block border-t border-white/5">
@@ -715,6 +724,84 @@
                         <h3 class="text-2xl font-bold text-white mb-2">App Deployed!</h3>
                         <p class="text-green-400 font-mono text-sm">https://my-app.<a href="https://replit.com/ai" target="_blank" class="hover:text-cyan-400 transition-colors">replit</a>.dev</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: References -->
+        <section class="slide px-8 lg:px-24">
+            <div class="max-w-4xl w-full mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl font-bold text-white mb-6">Thank You!</h2>
+                    <p class="text-xl text-gray-400">探索 AI 编程的无限可能</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-link text-cyan-400"></i> 参考文档 & 延伸阅读
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="https://simonwillison.net/2025/Nov/18/google-antigravity/" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-solid fa-blog text-orange-400 text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">Google Antigravity</div>
+                                <div class="text-xs text-gray-500 font-mono">simonwillison.net</div>
+                            </div>
+                        </a>
+
+                        <a href="https://docs.windsurf.com/context-awareness/windsurf-overview" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-solid fa-book text-purple-400 text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">Windsurf Context Awareness</div>
+                                <div class="text-xs text-gray-500 font-mono">docs.windsurf.com</div>
+                            </div>
+                        </a>
+
+                        <a href="https://docs.qoder.com/zh" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-solid fa-book text-orange-400 text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">Qoder Documentation</div>
+                                <div class="text-xs text-gray-500 font-mono">docs.qoder.com</div>
+                            </div>
+                        </a>
+
+                        <a href="https://docs.trae.ai/ide/what-is-trae" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-solid fa-book text-blue-400 text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">What is Trae?</div>
+                                <div class="text-xs text-gray-500 font-mono">docs.trae.ai</div>
+                            </div>
+                        </a>
+
+                        <a href="https://docs.trae.ai/ide/auto-mode?_lang=en" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-solid fa-robot text-blue-400 text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">Trae Auto Mode</div>
+                                <div class="text-xs text-gray-500 font-mono">docs.trae.ai</div>
+                            </div>
+                        </a>
+
+                        <a href="https://code.claude.com/docs/en/model-config" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-solid fa-sliders text-orange-400 text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">Claude Model Config</div>
+                                <div class="text-xs text-gray-500 font-mono">code.claude.com</div>
+                            </div>
+                        </a>
+
+                        <a href="https://docs.github.com/zh/copilot/tutorials" target="_blank" class="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group border border-transparent hover:border-cyan-500/30">
+                            <i class="fa-brands fa-github text-white text-xl w-8"></i>
+                            <div>
+                                <div class="text-white font-medium group-hover:text-cyan-400 transition-colors">Copilot Tutorials</div>
+                                <div class="text-xs text-gray-500 font-mono">docs.github.com</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12 text-gray-500 text-sm font-mono">
+                    <p>Generated by Alarik & Antigravity</p>
                 </div>
             </div>
         </section>
