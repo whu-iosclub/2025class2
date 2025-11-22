@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App 创意实验室 | Future Apps Pitch</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            overflow: hidden;
+            background-color: #0f172a;
+            color: white;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbar for specialized content */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        /* Mesh Gradient Background Animation */
+        .mesh-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.6;
+            transition: background 1s ease;
+        }
+    </style>
+    
+    <!-- Import Map for React & Framer Motion -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "framer-motion": "https://esm.sh/framer-motion@10.12.16?external=react,react-dom",
+        "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react,react-dom"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useRef } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { motion, AnimatePresence, useSpring, useTransform, useMotionValue } from 'framer-motion';
+        import { 
+            Utensils, Clock, Calculator, ScanText, 
+            ArrowRight, ArrowLeft, ChevronRight, 
+            Smartphone, Zap, RefreshCcw, Camera, Sparkles,
+            Code2, Quote, CheckCircle2
+        } from 'lucide-react';
+
+        // --- DATA & CONFIG ---
+
+        const slides = [
+            {
+                id: 'intro',
+                title: '未来应用构想',
+                subtitle: 'App Ideas Pitch Deck',
+                theme: 'from-slate-900 via-purple-900 to-slate-900',
+                accent: 'text-purple-400'
+            },
+            {
+                id: 'eat',
+                title: '去哪吃',
+                subtitle: '告别选择困难症',
+                tagline: '解决全人类中午最大的难题',
+                theme: 'from-orange-900 via-red-900 to-rose-900',
+                accent: 'text-orange-400',
+                icon: Utensils
+            },
+            {
+                id: 'flow',
+                title: '随行',
+                subtitle: '零感知时间记录',
+                tagline: 'NFC + 自动化 = 忘记自己在记录',
+                theme: 'from-blue-900 via-cyan-900 to-sky-900',
+                accent: 'text-cyan-400',
+                icon: Clock
+            },
+            {
+                id: 'cost',
+                title: '朝夕计',
+                subtitle: '物品全生命周期管理',
+                tagline: '如果你每天都用它，那它就是免费的',
+                theme: 'from-emerald-900 via-teal-900 to-green-900',
+                accent: 'text-emerald-400',
+                icon: Calculator
+            },
+            {
+                id: 'trans',
+                title: '转记',
+                subtitle: '万能转换器',
+                tagline: '不仅仅是OCR，是内容的重构',
+                theme: 'from-indigo-900 via-violet-900 to-fuchsia-900',
+                accent: 'text-indigo-400',
+                icon: ScanText
+            },
+             {
+                id: 'outro',
+                title: '感谢观看',
+                subtitle: '期待落地实现',
+                theme: 'from-gray-900 via-black to-gray-900',
+                accent: 'text-white'
+            }
+        ];
+
+        // --- COMPONENTS ---
+
+        // 1. Slide: Intro
+        const IntroSlide = ({ onStart }) => {
+            return (
+                <div className="flex flex-col items-center justify-center h-full text-center z-10">
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                        <div className="inline-block px-4 py-1.5 mb-6 border border-purple-500/30 rounded-full bg-purple-500/10 backdrop-blur-md">
+                            <span className="text-purple-300 text-sm font-mono tracking-widest">WHU iOS Club Future Plan</span>
+                        </div>
+                        <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-purple-400">
+                            NEXT<br/>APPS
+                        </h1>
+                        <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
+                            四个解决生活具体痛点的应用构想<br/>
+                            <span className="text-sm text-gray-500 mt-2 block font-mono">Future Apps Pitch Deck</span>
+                        </p>
+                        
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={onStart}
+                            className="px-8 py-4 bg-white text-black rounded-full font-bold text-lg flex items-center gap-2 mx-auto hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-shadow"
+                        >
+                            Start Presentation <ArrowRight size={20} />
+                        </motion.button>
+                    </motion.div>
+                </div>
+            );
+        };
+
+        // 2. Slide: 去哪吃 (Random Food Picker)
+        const EatSlide = () => {
+            const [status, setStatus] = useState('idle'); // idle, scanning, result
+            const [selectedFood, setSelectedFood] = useState(null);
+            
+            const foods = [
+                { name: "麦当劳", type: "Fast Food", rating: 4.8, dist: "200m", price: "¥35", color: "bg-red-500" },
+                { name: "杨国福麻辣烫", type: "Spicy Hot Pot", rating: 4.5, dist: "500m", price: "¥28", color: "bg-orange-500" },
+                { name: "轻食沙拉", type: "Healthy", rating: 4.2, dist: "800m", price: "¥45", color: "bg-green-500" },
+                { name: "兰州拉面", type: "Noodles", rating: 4.6, dist: "300m", price: "¥18", color: "bg-blue-500" },
+                { name: "日式盖饭", type: "Rice Bowl", rating: 4.4, dist: "600m", price: "¥38", color: "bg-yellow-600" },
+                { name: "隆江猪脚饭", type: "Rice", rating: 4.7, dist: "400m", price: "¥22", color: "bg-amber-700" }
+            ];
+
+            const startScan = () => {
+                setStatus('scanning');
+                setTimeout(() => {
+                    const randomFood = foods[Math.floor(Math.random() * foods.length)];
+                    setSelectedFood(randomFood);
+                    setStatus('result');
+                }, 2000);
+            };
+
+            const reset = () => {
+                setStatus('idle');
+                setSelectedFood(null);
+            };
+
+            return (
+                <div className="flex flex-col md:flex-row items-center justify-between h-full w-full max-w-6xl mx-auto px-8 gap-12">
+                    <div className="flex-1 text-left">
+                        <motion.div initial={{x: -50, opacity: 0}} animate={{x: 0, opacity: 1}} transition={{delay: 0.2}}>
+                            <h2 className="text-6xl font-bold text-orange-500 mb-4">去哪吃</h2>
+                            <h3 className="text-3xl font-light text-white mb-6">不再为午餐纠结</h3>
+                            <ul className="space-y-4 text-lg text-gray-300">
+                                <li className="flex items-center gap-3"><CheckCircle2 className="text-orange-500" size={20}/> <span>基于地理位置推荐周边美食</span></li>
+                                <li className="flex items-center gap-3"><CheckCircle2 className="text-orange-500" size={20}/> <span>"雷达模式"：扫描附近高分好店</span></li>
+                                <li className="flex items-center gap-3"><CheckCircle2 className="text-orange-500" size={20}/> <span>一键导航，拒绝纠结</span></li>
+                            </ul>
+                        </motion.div>
+                    </div>
+
+                    <div className="flex-1 flex justify-center">
+                        <div className="relative w-[320px] h-[640px] bg-gray-900 rounded-[3rem] border-8 border-gray-800 shadow-2xl overflow-hidden flex flex-col items-center pt-12 relative">
+                            {/* Notch */}
+                            <div className="absolute top-0 w-40 h-6 bg-gray-800 rounded-b-xl z-30"></div>
+                            
+                            {/* App UI */}
+                            <div className="w-full h-full bg-slate-900 relative overflow-hidden flex flex-col">
+                                {/* Map Background Simulation */}
+                                <div className="absolute inset-0 opacity-20">
+                                    <div className="w-full h-full bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                    <motion.div 
+                                        className="absolute top-1/2 left-1/2 w-4 h-4 bg-blue-500 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.8)] z-10"
+                                        style={{ x: '-50%', y: '-50%' }}
+                                    />
+                                    {/* Random Dots for places */}
+                                    {[...Array(10)].map((_, i) => (
+                                        <div key={i} className="absolute w-1.5 h-1.5 bg-gray-500 rounded-full" 
+                                             style={{ top: `${Math.random()*100}%`, left: `${Math.random()*100}%` }} />
+                                    ))}
+                                </div>
+
+                                {/* Header */}
+                                <div className="relative z-20 px-6 pt-4 flex justify-between items-center">
+                                    <div className="text-white font-bold text-lg">Nearby</div>
+                                    <div className="w-8 h-8 bg-gray-700 rounded-full"></div>
+                                </div>
+
+                                {/* Main Interaction Area */}
+                                <div className="flex-1 flex flex-col items-center justify-center relative z-20 p-6">
+                                    <AnimatePresence mode='wait'>
+                                        {status === 'idle' && (
+                                            <motion.div 
+                                                key="idle"
+                                                initial={{ scale: 0.9, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                exit={{ scale: 0.9, opacity: 0 }}
+                                                className="flex flex-col items-center"
+                                            >
+                                                <div className="w-48 h-48 rounded-full border-2 border-orange-500/30 flex items-center justify-center mb-8 relative">
+                                                    <div className="absolute inset-0 bg-orange-500/10 rounded-full animate-pulse"></div>
+                                                    <Utensils size={48} className="text-orange-500" />
+                                                </div>
+                                                <button 
+                                                    onClick={startScan}
+                                                    className="w-full py-4 px-8 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-2xl font-bold text-xl shadow-lg shadow-orange-500/20 active:scale-95 transition-transform"
+                                                >
+                                                    开始探索
+                                                </button>
+                                            </motion.div>
+                                        )}
+
+                                        {status === 'scanning' && (
+                                            <motion.div 
+                                                key="scanning"
+                                                className="flex flex-col items-center justify-center w-full h-full absolute inset-0"
+                                            >
+                                                {/* Radar Effect */}
+                                                <div className="relative w-64 h-64">
+                                                    <motion.div 
+                                                        className="absolute inset-0 border-2 border-orange-500/50 rounded-full"
+                                                        animate={{ scale: [1, 1.5], opacity: [1, 0] }}
+                                                        transition={{ repeat: Infinity, duration: 1.5 }}
+                                                    />
+                                                    <motion.div 
+                                                        className="absolute inset-0 border-2 border-orange-500/50 rounded-full"
+                                                        animate={{ scale: [1, 1.5], opacity: [1, 0] }}
+                                                        transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }}
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-orange-500/20 to-transparent rounded-full animate-spin [animation-duration:2s]"></div>
+                                                    
+                                                    {/* Popping dots */}
+                                                    <motion.div 
+                                                        className="absolute top-10 left-20 w-3 h-3 bg-white rounded-full shadow shadow-white"
+                                                        initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1] }} transition={{ delay: 0.5 }}
+                                                    />
+                                                    <motion.div 
+                                                        className="absolute bottom-16 right-12 w-3 h-3 bg-white rounded-full shadow shadow-white"
+                                                        initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1] }} transition={{ delay: 1.2 }}
+                                                    />
+                                                </div>
+                                                <div className="mt-8 text-orange-400 font-mono tracking-widest">SCANNING...</div>
+                                            </motion.div>
+                                        )}
+
+                                        {status === 'result' && selectedFood && (
+                                            <motion.div 
+                                                key="result"
+                                                initial={{ y: 100, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                className="w-full"
+                                            >
+                                                <div className="bg-white rounded-3xl p-6 shadow-2xl text-slate-900">
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <div>
+                                                            <span className={`text-xs font-bold px-2 py-1 rounded text-white ${selectedFood.color} mb-2 inline-block`}>
+                                                                {selectedFood.type}
+                                                            </span>
+                                                            <h3 className="text-2xl font-bold leading-tight">{selectedFood.name}</h3>
+                                                        </div>
+                                                        <div className="flex flex-col items-end">
+                                                            <div className="flex items-center gap-1 text-orange-500 font-bold">
+                                                                <span className="text-lg">{selectedFood.rating}</span>
+                                                                <Sparkles size={14} fill="currentColor" />
+                                                            </div>
+                                                            <span className="text-xs text-gray-400">1.2k reviews</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
+                                                        <span className="flex items-center gap-1"><Zap size={14}/> {selectedFood.dist}</span>
+                                                        <span className="flex items-center gap-1"><Utensils size={14}/> {selectedFood.price}/人</span>
+                                                    </div>
+
+                                                    <div className="flex gap-3">
+                                                        <button className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                                                            <ArrowRight size={16} /> 导航
+                                                        </button>
+                                                        <button 
+                                                            onClick={reset}
+                                                            className="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-500"
+                                                        >
+                                                            <RefreshCcw size={20} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // 3. Slide: 随行 (NFC Time Tracker)
+        const FlowSlide = () => {
+            const [isRecording, setIsRecording] = useState(false);
+            const [time, setTime] = useState(0);
+
+            useEffect(() => {
+                let interval;
+                if (isRecording) {
+                    interval = setInterval(() => setTime(t => t + 1), 1000);
+                }
+                return () => clearInterval(interval);
+            }, [isRecording]);
+
+            const formatTime = (s) => {
+                const mins = Math.floor(s / 60).toString().padStart(2, '0');
+                const secs = (s % 60).toString().padStart(2, '0');
+                return `${mins}:${secs}`;
+            };
+
+            return (
+                <div className="flex flex-col md:flex-row-reverse items-center justify-between h-full w-full max-w-6xl mx-auto px-8 gap-12">
+                    <div className="flex-1 text-left">
+                        <motion.div initial={{x: 50, opacity: 0}} animate={{x: 0, opacity: 1}} transition={{delay: 0.2}}>
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded text-sm font-mono">NFC AUTOMATION</span>
+                            </div>
+                            <h2 className="text-6xl font-bold text-cyan-400 mb-4">随行 Flow</h2>
+                            <h3 className="text-3xl font-light text-white mb-6">零感知时间记录</h3>
+                            <p className="text-lg text-cyan-100/80 mb-8 leading-relaxed">
+                                这是一个没有 "开始/暂停" 按钮的 App。<br/>
+                                将 NFC 贴纸贴在书桌、健身房或床头。<br/>
+                                手机一碰，自动开始记录任务；离开或触碰下一个标签，自动切换。
+                            </p>
+                        </motion.div>
+                    </div>
+
+                    <div className="flex-1 flex justify-center items-center relative">
+                        {/* NFC Tag Visualization */}
+                        <motion.div 
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-cyan-500/30 flex items-center justify-center z-0"
+                            animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                        />
+                        <div className="absolute top-20 right-10 z-0">
+                            <div className="w-24 h-24 bg-white/10 backdrop-blur rounded-full flex items-center justify-center border border-white/20 rotate-12">
+                                <span className="text-xs text-white font-mono">NFC TAG<br/>#Reading</span>
+                            </div>
+                        </div>
+
+                        {/* Phone UI */}
+                        <div className="relative w-[300px] h-[580px] bg-slate-900 rounded-[2.5rem] border-4 border-slate-700 shadow-2xl overflow-hidden flex flex-col z-10 group cursor-pointer"
+                             onClick={() => setIsRecording(!isRecording)}>
+                            
+                            <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/50 to-slate-900 z-0"></div>
+                            
+                            <div className="relative z-10 p-8 h-full flex flex-col justify-between">
+                                <div>
+                                    <div className="text-cyan-400 text-sm font-mono mb-1">CURRENT TASK</div>
+                                    <h4 className="text-3xl font-bold text-white mb-2">{isRecording ? "深度阅读" : "等待触发..."}</h4>
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-2 h-2 rounded-full ${isRecording ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`}></div>
+                                        <span className="text-gray-400 text-xs">{isRecording ? "Recording" : "Idle"}</span>
+                                    </div>
+                                </div>
+
+                                <div className="text-center">
+                                    <div className="text-7xl font-mono font-light text-white tracking-tighter">
+                                        {formatTime(time)}
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-800/50 rounded-xl p-4 backdrop-blur">
+                                    <div className="flex justify-between text-xs text-gray-400 mb-2">
+                                        <span>今日统计</span>
+                                        <span>4h 20m</span>
+                                    </div>
+                                    <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-2/3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Interaction Hint */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="text-white flex flex-col items-center">
+                                    <Zap size={48} className="mb-2 text-cyan-400"/>
+                                    <span className="font-bold">点击模拟 NFC 触碰</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // 4. Slide: 朝夕计 (Cost Per Use)
+        const CostSlide = () => {
+            const [price, setPrice] = useState(2999);
+            const [days, setDays] = useState(365);
+            
+            const cpu = (price / days).toFixed(2);
+
+            return (
+                <div className="flex flex-col md:flex-row items-center justify-between h-full w-full max-w-6xl mx-auto px-8 gap-12">
+                    <div className="flex-1 text-left">
+                        <motion.div initial={{y: 20, opacity: 0}} animate={{y: 0, opacity: 1}}>
+                             <div className="flex items-center gap-3 mb-4">
+                                <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded text-sm font-mono">FINANCIAL MINDFULNESS</span>
+                            </div>
+                            <h2 className="text-6xl font-bold text-emerald-400 mb-4">朝夕计</h2>
+                            <h3 className="text-2xl font-light text-white mb-6">计算物品的真实价值</h3>
+                            <p className="text-lg text-emerald-100/80 mb-8">
+                                只要使用频率足够高，再贵的东西也是免费的。<br/>
+                                记录每一次购买，每一次使用，让数据告诉你什么值得买。
+                            </p>
+                        </motion.div>
+                    </div>
+
+                    <div className="flex-1 w-full max-w-md">
+                        <motion.div 
+                            className="bg-white/5 backdrop-blur-xl border border-emerald-500/30 rounded-2xl p-8 shadow-2xl"
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                        >
+                            <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-4">
+                                <div className="w-16 h-16 bg-emerald-500 rounded-lg flex items-center justify-center text-white">
+                                    <Smartphone size={32} />
+                                </div>
+                                <div>
+                                    <div className="text-gray-400 text-sm">Item Name</div>
+                                    <div className="text-xl font-bold text-white">新款游戏机</div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <div className="flex justify-between text-sm text-gray-400 mb-2">
+                                        <span>购买价格</span>
+                                        <span>¥ {price}</span>
+                                    </div>
+                                    <input 
+                                        type="range" min="100" max="10000" step="100" value={price}
+                                        onChange={(e) => setPrice(Number(e.target.value))}
+                                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                                    />
+                                </div>
+                                
+                                <div>
+                                    <div className="flex justify-between text-sm text-gray-400 mb-2">
+                                        <span>使用天数</span>
+                                        <span>{days} 天</span>
+                                    </div>
+                                    <input 
+                                        type="range" min="1" max="1000" step="10" value={days}
+                                        onChange={(e) => setDays(Number(e.target.value))}
+                                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mt-10 text-center">
+                                <div className="text-sm text-gray-400 mb-1">平均每日成本 (CPU)</div>
+                                <div className="text-6xl font-bold text-emerald-400 font-mono flex justify-center items-baseline">
+                                    <span className="text-2xl mr-1">¥</span>
+                                    {cpu}
+                                </div>
+                                <div className="mt-4 text-xs text-emerald-200/60 bg-emerald-900/30 py-2 rounded">
+                                    {cpu < 5 ? "🎉 太值了！简直就是白送！" : "继续多用用，把成本降下来！"}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            );
+        };
+
+        // 5. Slide: 转记 (Transcribe)
+        const TransSlide = () => {
+            const [mode, setMode] = useState('scan'); // scan, processed
+            
+            return (
+                <div className="flex flex-col md:flex-row items-center justify-between h-full w-full max-w-6xl mx-auto px-8 gap-12">
+                    <div className="flex-1 text-left order-2 md:order-1">
+                         <motion.div initial={{x: -50, opacity: 0}} animate={{x: 0, opacity: 1}} transition={{delay: 0.2}}>
+                            <h2 className="text-6xl font-bold text-indigo-400 mb-4">转记</h2>
+                            <h3 className="text-2xl font-light text-white mb-6">拍照转换一切</h3>
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div className="bg-indigo-900/40 p-4 rounded-xl border border-indigo-500/20">
+                                    <div className="text-indigo-300 font-bold mb-1">简繁转换</div>
+                                    <div className="text-xs text-gray-400">一键转换古籍或港台文献</div>
+                                </div>
+                                <div className="bg-indigo-900/40 p-4 rounded-xl border border-indigo-500/20">
+                                    <div className="text-indigo-300 font-bold mb-1">数学公式</div>
+                                    <div className="text-xs text-gray-400">手写公式 &rarr; LaTeX 代码</div>
+                                </div>
+                                <div className="bg-indigo-900/40 p-4 rounded-xl border border-indigo-500/20">
+                                    <div className="text-indigo-300 font-bold mb-1">中英互译</div>
+                                    <div className="text-xs text-gray-400">保留原文排版的即时翻译</div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    <div className="flex-1 flex justify-center order-1 md:order-2">
+                        <div className="relative w-[340px] h-[460px] bg-gray-800 rounded-lg shadow-2xl overflow-hidden border border-gray-700 group">
+                            {/* Image Layer */}
+                            <div className="absolute inset-0 bg-white p-6 text-black font-serif leading-loose flex flex-col">
+                                <h2 className="text-2xl font-bold mb-4">Quadratic Formula</h2>
+                                <p className="mb-4 text-lg italic">
+                                    The solution of the quadratic equation is given by:
+                                </p>
+                                <div className="text-xl text-center my-4 font-serif border border-black p-4">
+                                    x = [-b ± √(b² - 4ac)] / 2a
+                                </div>
+                                <p className="text-sm text-gray-600 mt-auto">Handwritten notes scan #001</p>
+                            </div>
+
+                            {/* Scanner Effect Overlay */}
+                            <motion.div 
+                                className="absolute top-0 left-0 w-full h-2 bg-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.8)] z-20"
+                                animate={{ top: ['0%', '100%', '0%'] }}
+                                transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+                            />
+                            
+                            {/* Result Layer (Masked) */}
+                            <motion.div 
+                                className="absolute inset-0 bg-gray-900 p-6 text-indigo-100 font-mono text-sm z-10 flex flex-col"
+                                initial={{ opacity: 0 }}
+                                whileHover={{ opacity: 0.95 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className="flex justify-between items-center mb-4 border-b border-indigo-500/30 pb-2">
+                                    <span className="text-indigo-400 font-bold flex items-center gap-2"><Code2 size={16}/> LaTeX Output</span>
+                                    <span className="text-xs bg-indigo-600 px-2 py-0.5 rounded">CONF: 99%</span>
+                                </div>
+                                <code className="block break-all">
+                                    {`\\section*{Quadratic Formula}`}<br/><br/>
+                                    The solution is:<br/>
+                                    {`$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$`}
+                                </code>
+                                <div className="mt-auto pt-4">
+                                    <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded transition">Copy Code</button>
+                                </div>
+                            </motion.div>
+                            
+                             <div className="absolute bottom-4 right-4 z-30 text-indigo-600 bg-white/80 px-3 py-1 rounded-full text-xs font-bold shadow pointer-events-none">
+                                Hover to Reveal Code
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // 6. Slide: Outro
+        const OutroSlide = ({ onReplay }) => {
+            const apps = [
+                { id: 'eat', icon: Utensils, color: 'text-orange-400', bg: 'bg-orange-500/20', name: '去哪吃' },
+                { id: 'flow', icon: Clock, color: 'text-cyan-400', bg: 'bg-cyan-500/20', name: '随行' },
+                { id: 'cost', icon: Calculator, color: 'text-emerald-400', bg: 'bg-emerald-500/20', name: '朝夕计' },
+                { id: 'trans', icon: ScanText, color: 'text-indigo-400', bg: 'bg-indigo-500/20', name: '转记' },
+            ];
+
+            return (
+                <div className="flex flex-col items-center justify-center h-full z-10">
+                    <motion.div 
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        className="text-center"
+                    >
+                        <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
+                            Thanks for Watching
+                        </h2>
+                        <p className="text-xl text-gray-400 mb-12">Which one is your favorite?</p>
+                        
+                        <div className="flex gap-6 mb-16 justify-center flex-wrap">
+                            {apps.map((app, i) => (
+                                <motion.div 
+                                    key={app.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 + 0.5 }}
+                                    className="flex flex-col items-center gap-3"
+                                >
+                                    <div className={`w-16 h-16 rounded-2xl ${app.bg} flex items-center justify-center border border-white/5`}>
+                                        <app.icon size={32} className={app.color} />
+                                    </div>
+                                    <span className="text-sm text-gray-400">{app.name}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <motion.button 
+                            onClick={onReplay} 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-8 py-3 border border-white/20 rounded-full hover:bg-white/10 transition flex items-center gap-2 mx-auto text-gray-300 hover:text-white"
+                        >
+                            <RefreshCcw size={18} /> Replay
+                        </motion.button>
+                    </motion.div>
+                </div>
+            );
+        };
+
+
+        // --- MAIN APP ---
+
+        const App = () => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const [direction, setDirection] = useState(0);
+
+            const nextSlide = () => {
+                if (currentSlide < slides.length - 1) {
+                    setDirection(1);
+                    setCurrentSlide(c => c + 1);
+                }
+            };
+
+            const prevSlide = () => {
+                if (currentSlide > 0) {
+                    setDirection(-1);
+                    setCurrentSlide(c => c - 1);
+                }
+            };
+
+            // Keyboard Navigation
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+                    if (e.key === 'ArrowLeft') prevSlide();
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [currentSlide]);
+
+            const slide = slides[currentSlide];
+
+            // Slide Content Switcher
+            const renderSlideContent = () => {
+                switch(slide.id) {
+                    case 'intro': return <IntroSlide onStart={nextSlide} />;
+                    case 'eat': return <EatSlide />;
+                    case 'flow': return <FlowSlide />;
+                    case 'cost': return <CostSlide />;
+                    case 'trans': return <TransSlide />;
+                    case 'outro': return <OutroSlide onReplay={() => setCurrentSlide(0)} />;
+                    default: return null;
+                }
+            };
+
+            return (
+                <div className={`relative w-screen h-screen overflow-hidden transition-colors duration-1000 bg-slate-950`}>
+                    
+                    {/* Dynamic Background Mesh */}
+                    <div className={`mesh-bg bg-gradient-to-br ${slide.theme}`}></div>
+                    
+                    {/* Navigation Dots */}
+                    <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-3 z-50">
+                        {slides.map((s, idx) => (
+                            <button 
+                                key={s.id}
+                                onClick={() => {
+                                    setDirection(idx > currentSlide ? 1 : -1);
+                                    setCurrentSlide(idx);
+                                }}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Main Content Area */}
+                    <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12 overflow-hidden">
+                        <AnimatePresence mode='wait' custom={direction}>
+                            <motion.div
+                                key={currentSlide}
+                                custom={direction}
+                                initial={{ opacity: 0, x: direction * 100, filter: 'blur(10px)' }}
+                                animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                                exit={{ opacity: 0, x: direction * -100, filter: 'blur(10px)' }}
+                                transition={{ duration: 0.5, ease: "anticipate" }}
+                                className="w-full h-full"
+                            >
+                                {renderSlideContent()}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Controls */}
+                    <div className="absolute bottom-8 right-8 flex gap-4 z-50">
+                        <button 
+                            onClick={prevSlide} 
+                            disabled={currentSlide === 0}
+                            className="p-3 rounded-full border border-white/10 bg-black/20 text-white hover:bg-white/10 disabled:opacity-30 transition backdrop-blur-md"
+                        >
+                            <ArrowLeft size={24} />
+                        </button>
+                        <button 
+                            onClick={nextSlide}
+                            disabled={currentSlide === slides.length - 1}
+                            className="p-3 rounded-full bg-white text-black hover:bg-gray-200 disabled:opacity-50 transition shadow-lg shadow-white/10"
+                        >
+                            {currentSlide === slides.length - 1 ? <Sparkles size={24} /> : <ArrowRight size={24} />}
+                        </button>
+                    </div>
+
+                    {/* Page Number */}
+                    <div className="absolute bottom-8 left-8 text-white/30 font-mono text-sm z-50">
+                        {String(currentSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
